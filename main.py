@@ -15,9 +15,14 @@ class Ball():
         self.y = Y
         self.radius = radius
         self.screen = screen
-        self.vert_speed = 4
-        self.horz_speed = 4
-        self.rect = None
+        self.vert_speed = 0
+        self.horz_speed = -10
+        self.rect = pygame.draw.circle(self.screen, WHITE, (self.x,self.y), self.radius)
+
+        self.left =  self.x - self.radius
+        self.right = self.x + self.radius
+        self.top = self.y - self.radius
+        self.bottom = self.y + self.radius
 
     def draw(self):
         self.rect = pygame.draw.circle(self.screen, WHITE, (self.x,self.y), self.radius)
@@ -32,16 +37,17 @@ class Ball():
     def flip_vert_speed(self):
         self.vert_speed = -self.vert_speed
 
-class Pattel():
+class paddel():
     
     def __init__(self, X,Y,screen):
         self.x = X
         self.y = Y
-        self.screen = screen
-        self.vert_speed = 4
-        self.rect =  None
         self.width = 50
         self.height = 100
+        self.screen = screen
+        self.vert_speed = 10
+        self.rect =  pygame.draw.rect(self.screen, WHITE, (self.x, self.y, self.width, self.height))
+        
 
     def draw(self):
         self.rect = pygame.draw.rect(self.screen, WHITE, (self.x, self.y, self.width, self.height))
@@ -57,6 +63,28 @@ class Pattel():
         if self.y < self.screen.get_height() - self.height:
             self.y += self.vert_speed
 
+
+def collision(ball, paddel):
+
+    ball_tlc_x = ball.x - ball.radius
+    ball_tlc_y = ball.y - ball.radius
+
+
+    if paddel.x <= ball_tlc_x and ball_tlc_x <= paddel.x + paddel.width and paddel.y <= ball_tlc_y and ball_tlc_y <= paddel.y+paddel.height:
+        print("collison")
+    
+
+    
+# def in_paddel(ball, paddel):
+
+#     ball_top_y = ball.y - ball.radius
+#     ball_top_x = ball.x - ball.radius
+
+#     paddel_bottom_x =  paddel.x + paddel.width
+#     paddel_bottom_y =  paddel.y + paddel.height
+
+#     if ball_top_y >= paddel.y and ball_top_y <= paddel_bottom_y and ball_top_x >= paddel.x and ball_top_x <= paddel_bottom_y:
+#         print("yep") 
 
 
 
@@ -76,9 +104,9 @@ def main():
 
     clock = pygame.time.Clock()
 
-    ball = Ball(300,300, 10, screen)
+    ball = Ball(305,305, 10, screen)
 
-    player_left = Pattel(0, 200, screen)
+    player_left = paddel(0, 200, screen)
 
 
     while True:
@@ -103,20 +131,29 @@ def main():
 
         ball.move()
 
+        collision(ball, player_left)    
+
         #check top
-        if ball.y <= 0:
+        if ball.y - ball.radius <= 0:
             ball.flip_vert_speed()
         #check bottom
-        if ball.y >= HEIGHT:
+        if ball.y + ball.radius >= HEIGHT:
             ball.flip_vert_speed()
 
         #check left
-        if ball.x <= 0:
+        if ball.x - ball.radius <= 0:
             ball.flip_horz_speed()
 
         #check right
-        if ball.x >= WIDTH:
+        if ball.x + ball.radius >= WIDTH:
             ball.flip_horz_speed()
+
+        #check left paddel collison
+        
+    
+        #check right paddel collision
+        
+
 
         screen.blit(background, (0,0))
 
