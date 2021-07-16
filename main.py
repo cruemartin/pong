@@ -107,6 +107,8 @@ def main():
     ball = Ball(305,305, 10, screen)
 
     player_left = paddel(0, 200, screen)
+    player_right =  paddel(WIDTH-50, 200, screen)
+
 
 
     while True:
@@ -122,16 +124,22 @@ def main():
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_UP]:
-            player_left.move_up()
+            player_right.move_up()
         if keys[pygame.K_DOWN]:
+            player_right.move_down()
+
+        if keys[pygame.K_w]:
+            player_left.move_up()
+
+        if keys[pygame.K_s]:
             player_left.move_down()
-
-
 
 
         ball.move()
 
-        collision(ball, player_left)    
+        collision(ball, player_left)   
+
+        collision(ball, player_right)
 
         #check top
         if ball.y - ball.radius <= 0:
@@ -159,6 +167,7 @@ def main():
 
         ball.draw()
         player_left.draw()
+        player_right.draw()
 
         pygame.display.flip()
 
