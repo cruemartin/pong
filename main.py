@@ -8,6 +8,8 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 GREEN = (0,255,0)
 
+WIN_SCORE = 3
+
 
 class Ball():
 
@@ -99,7 +101,7 @@ def main():
     player_right =  Paddel(WIDTH-50, 200, screen)
 
     player_left_score = 0
-    player_right_score = 9
+    player_right_score = 0
 
     player_left_win = False
     player_right_win = False
@@ -125,9 +127,9 @@ def main():
 
 
         #check for win
-        if player_left_score == 10:
+        if player_left_score == WIN_SCORE:
             player_left_win = True
-        if player_right_score == 10:
+        if player_right_score == WIN_SCORE:
             player_right_win = True
         
         #if there is a win display the win message
