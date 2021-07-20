@@ -78,9 +78,7 @@ def court(screen):
     pygame.draw.line(screen, WHITE, (screen.get_width()/2 -3 ,0), (screen.get_width()/2 - 3 , screen.get_height()) , width= 3 )
 
 
-
 def main():
-    # pygame.init()
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -101,7 +99,10 @@ def main():
     player_right =  Paddel(WIDTH-50, 200, screen)
 
     player_left_score = 0
-    player_right_score = 0
+    player_right_score = 9
+
+    player_left_win = False
+    player_right_win = False
 
 
 
@@ -111,12 +112,36 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
-        
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                quit()
 
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                pause(screen)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    quit()
+
+                if event.key == pygame.K_p:
+                    pause(screen)
+
+                if player_right_win or player_left_win and event.key == pygame.K_r:
+                    main()
+
+
+        #check for win
+        if player_left_score == 10:
+            player_left_win = True
+        if player_right_score == 10:
+            player_right_win = True
+        
+        #if there is a win display the win message
+        if player_right_win or player_left_win:
+            win_font = pygame.font.Font(None, 75)
+            message = ""
+            if player_left_win:
+                message = "Left Wins!"
+            if player_right_win:
+                message = "Right Wins!"
+
+            win_text = win_font.render(message, 1, WHITE)
+
+            screen.blit(win_text, (screen.get_width()/2 - win_text.get_width()/2, screen.get_height()/2 - win_text.get_height()/2))
 
         #check keys pressed for paddel movement
         keys = pygame.key.get_pressed()
@@ -165,20 +190,44 @@ def main():
 
         screen.blit(background, (0,0))
 
-
-        #display scrore
-        font = pygame.font.Font(None, 50)
-        text = font.render(str(player_left_score), 1, WHITE)
-        screen.blit(text, (screen.get_width()/2 - (text.get_width() + 10) , screen.get_height()/2 - 25))
-        text = font.render(str(player_right_score), 1, WHITE)
-        screen.blit(text, (screen.get_width()/2 + 5, screen.get_height()/2 - 25))
-
+        #check for win
+        if player_left_score == 10:
+            player_left_win = True
+        if player_right_score == 10:
+            player_right_win = True
         
-        #draw
-        court(screen)
-        ball.draw()
-        player_left.draw()
-        player_right.draw()
+        #if there is a win display the win message
+        if player_right_win or player_left_win:
+            win_font = pygame.font.Font(None, 75)
+            message = ""
+            if player_left_win:
+                message = "Left Wins!"
+            if player_right_win:
+                message = "Right Wins!"
+
+            win_text = win_font.render(message, 1, WHITE)
+
+            screen.blit(win_text, (screen.get_width()/2 - win_text.get_width()/2, screen.get_height()/2 - win_text.get_height()/2))
+
+            reset_font = pygame.font.Font(None,50)
+            reset_text = reset_font.render("Press [r] to play again or [Esc] to quit!", 1, WHITE)
+            screen.blit(reset_text, (screen.get_width()/2 - reset_text.get_width()/2, screen.get_height()/2 + (reset_text.get_height()/2 + win_text.get_height())))
+        
+        else:
+
+            #display scrore
+            font = pygame.font.Font(None, 50)
+            text = font.render(str(player_left_score), 1, WHITE)
+            screen.blit(text, (screen.get_width()/2 - (text.get_width() + 10) , screen.get_height()/2 - 25))
+            text = font.render(str(player_right_score), 1, WHITE)
+            screen.blit(text, (screen.get_width()/2 + 5, screen.get_height()/2 - 25))
+
+
+            #draw
+            court(screen)
+            ball.draw()
+            player_left.draw()
+            player_right.draw()
 
         pygame.display.flip()
 
@@ -236,12 +285,8 @@ def pause(screen):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_c:
                 return
         
-        # background = pygame.Surface(screen.get_size())
-        # background = background.convert()
-        # background.fill(BLACK)
 
         screen.fill(BLACK)
-
 
         paused_font = pygame.font.Font(None, 80)
         paused = paused_font.render("Game Paused", 1, WHITE)
@@ -250,9 +295,7 @@ def pause(screen):
         instruction = instruction_font.render("Press [c] to continue...",1, WHITE)
         screen.blit(instruction, (screen.get_width()/2 - instruction.get_width()/2, screen.get_height()/2))
 
-        # screen.blit(background, (0,0))
         pygame.display.flip()
 
 if __name__ == "__main__":
     title_screen()
-    # main()
