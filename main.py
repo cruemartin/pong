@@ -12,6 +12,7 @@ WIN_SCORE = 3
 
 
 class Ball():
+    """This a class for the ball object"""
 
     def __init__(self, X,Y, radius, screen):
         self.x = X
